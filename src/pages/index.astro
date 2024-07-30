@@ -1,16 +1,48 @@
 ---
+import MainLayout from '@layouts/MainLayout.astro';
+
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import {formatDate} from '../utils.ts';
+
+import { getEntry } from 'astro:content';
+
+const allBlogArticles: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = Array.from(
+  new Set(allBlogArticles.flatMap(article => article.data.tags))
+  
+).sort();
 
 ---
+<MainLayout pageTitle = "Home">
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+	<a href = "/blog">Blog Page</a>
+	
+	<h1>All Titles for Articles</h1>
+	{allBlogArticles.map((article, index) =>(
+		<p>Article {index + 1} {article.data.title}</p>
+	))}
+
+	<h1>All Slugs for Articles</h1>
+	{allBlogArticles.map((article, index) =>(
+		<p>Slug {index + 1} {article.slug}</p>
+	))}
+
+	<h1>All Dates for Articles</h1>
+	{allBlogArticles.map((article, index) =>(
+		<p>Article {index + 1} {formatDate(article.data.pubDate)}</p>
+	))}
+			
+	<h1>All Tags Per Article</h1>
+	{allBlogArticles.map((article, index) => (
+		<p>Article {index + 1} Tags: {article.data.tags.join(', ')}</p>
+	))}
+
+	<h1>All Tags Ever</h1>
+	{allTags.map(tag => (
+		<p>{tag}</p>
+	))}
+</MainLayout>
+

@@ -1,0 +1,57 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import {formatDate} from '../../../utils';
+
+export async function getStaticPaths() {
+    const allBlogArticles: CollectionEntry<'blog'>[] = await getCollection('blog');
+    const phases = allBlogArticles.map(article => article.data.phase);
+    return phases.map(phase => ({ params: { phase } }));
+
+}
+
+const { phase } = Astro.params;
+
+
+const allBlogArticles: CollectionEntry<'blog'>[] = (await getCollection('blog'));
+
+const allPhases = Array.from(
+  new Set(allBlogArticles.map(article => article.data.phase))
+).sort();
+
+const phaseArticles = allBlogArticles.filter(post => post.data.phase.includes(phase));
+
+---
+
+<MainLayout pageTitle={`Posts tagged with`}>
+       <div>
+        {allPhases.map((phase:String) => (
+            <a class = "phase" href = {`/blog/phase/${phase}`}>{phase}</a>
+            <br/>
+        ))}
+    </div>
+
+        {phaseArticles.map(post => (
+            <a href ={`/blog/${post.slug}`}>{post.data.title}</a>
+            <br/>
+      ))}
+
+</MainLayout>
+<style>
+    div{
+        display: flex;
+        gap:0.5em;
+        margin-bottom:20px;
+    }
+    .phase{
+        background-color: blue;
+        color:white;
+        text-decoration: none;
+        padding:5px 10px;
+        border-radius: 20px;
+    }
+    .phase:hover{
+        background-color: darkblue;
+    }
+</style>

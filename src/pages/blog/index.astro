@@ -1,0 +1,83 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Phase from '@components/Phase.astro';
+
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+const allBlogArticles: CollectionEntry<'blog'>[] = (await getCollection('blog'));
+
+export async function getStaticPaths(){
+    const allBlogArticles: CollectionEntry<'blog'>[] = await getCollection('blog');
+    const tags = new Set(allBlogArticles.flatMap(article => article.data.tags));
+
+    return  allBlogArticles.map(entry => ({
+        params:{
+            slug: entry.slug,
+            tags: entry.data.tags
+        },
+        props:{entry}
+    }));
+}
+
+
+const allBlogArticlesThought = await getCollection('blog', ({ data }) => {
+  return data.phase === 'thought';
+});
+
+
+const allBlogArticlesRabbitHole = await getCollection('blog', ({ data }) => {
+  return data.phase === 'rabbitHole';
+});
+
+
+const allBlogArticlesArticle = await getCollection('blog', ({ data }) => {
+  return data.phase === 'article';
+});
+
+const {entry} = Astro.props;
+
+
+const allPhases = Array.from(
+  allBlogArticles.map(article => article.data.phase)
+);
+
+---
+<MainLayout pageTitle = "Blog Directory">
+    <div>
+        {allPhases.map((phase:String) => (
+            <a class = "phase" href = {`/blog/phase/${phase}`}>{phase}</a>
+            <br/>
+        ))}
+    </div>
+
+    
+    {allBlogArticles.map(article => (
+
+        <a href = {`/blog/`+ article.slug}>{article.data.title}</a>
+        <br/>
+
+    ))}
+
+   
+
+ 
+
+</MainLayout>
+<style>
+    div{
+        display: flex;
+        gap:0.5em;
+        margin-bottom:20px;
+    }
+    .phase{
+        background-color: blue;
+        color:white;
+        text-decoration: none;
+        padding:5px 10px;
+        border-radius: 20px;
+    }
+    .phase:hover{
+        background-color: darkblue;
+    }
+</style>
