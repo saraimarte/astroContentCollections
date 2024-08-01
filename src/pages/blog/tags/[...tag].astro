@@ -23,15 +23,13 @@ const allBlogArticles: CollectionEntry<'blog'>[] = (await getCollection('blog'))
 
 const allPhases = Array.from(
   new Set(allBlogArticles.map(article => article.data.phase))
-).sort((a,b)=> 1 - 2);
+).sort();
 
 const allTags = Array.from(
     new Set(allBlogArticles.flatMap(post => (post.data.tags)))
 )
-
-const phaseArticles = allBlogArticles.filter(post => post.data.phase === phase);
 const tagArticles = allBlogArticles.filter(post => post.data.tags.includes(tag));
-const phaseAndTagPosts =  allBlogArticles.filter(post => (post.data.phase === phase && post.data.tags.includes(tag)));
+
 ---
 
 <MainLayout pageTitle={`Posts tagged with`}>
@@ -44,12 +42,12 @@ const phaseAndTagPosts =  allBlogArticles.filter(post => (post.data.phase === ph
 
       <div>
         {allTags.map((tag:String) => (
-            <a class = "phase" href = {`/blog/tag/${tag}`}>{tag}</a>
+            <a class = "phase" href = {`/blog/phase/${phase}/tag/${tag}`}>{tag}</a>
             <br/>
         ))}
       </div>
 
-        {phaseAndTagPosts.map(post => (
+        {tagArticles.map(post => (
             <a href ={`/blog/${post.slug}`}>{post.data.title}</a>
             <br/>
         ))}

@@ -1,6 +1,6 @@
 ---
 layout: '@layouts/Blog.astro'
-title: "The best laptops for developers in 2024"
+title: "thought tech hardware"
 pubDate: 2021-01-20
 author: 'John Doe'
 tags: ['tech', 'hardware']

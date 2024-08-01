@@ -1,10 +1,10 @@
 ---
 layout: '@layouts/Blog.astro'
-title: "Capturing Life's Moments with Canon Excellence2"
+title: "article photo canon tech"
 pubDate: 2024-01-15
 author: 'David Mitchell'
 tags: ['photography', 'canon', 'tech']
-phase: 'rabbit hole'
+phase: 'article'
 slug: capturing-lifes-moments-with-canon-excellence2
 ---
 
